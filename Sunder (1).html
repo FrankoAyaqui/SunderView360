@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sunder 3D — Modelado e Impresión 3D</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f7f6f3;
+  --bg-dark: #1a1814;
+  --text: #111010;
+  --text-mid: #5a5753;
+  --text-light: #9a9590;
+  --accent: #b5874a;
+  --accent-light: #f0e6d6;
+  --border: #e2dfd9;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 5rem;
+  background: rgba(255,255,255,0.95);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+}
+
+.nav-logo {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+
+.nav-logo span { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--accent); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 8rem 5rem 5rem;
+  gap: 4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-left {}
+
+.hero-eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 2rem;
+  height: 2px;
+  background: var(--accent);
+}
+
+.hero h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 1.8rem;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero-desc {
+  font-size: 1rem;
+  color: var(--text-mid);
+  line-height: 1.8;
+  max-width: 42ch;
+  margin-bottom: 2.5rem;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #fff;
+  background: var(--accent);
+  border: 2px solid var(--accent);
+  padding: 0.85rem 2rem;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: var(--text);
+  border-color: var(--text);
+}
+
+.btn-ghost {
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--text);
+  background: transparent;
+  border: 2px solid var(--border);
+  padding: 0.85rem 2rem;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+  display: inline-block;
+}
+
+.btn-ghost:hover {
+  border-color: var(--text);
+}
+
+.hero-right {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  height: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.hero-placeholder-icon {
+  font-size: 4rem;
+  line-height: 1;
+}
+
+.hero-placeholder-text {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+.hero-stats {
+  display: flex;
+  gap: 3rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.hero-stat-num {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.hero-stat-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-top: 0.3rem;
+}
+
+/* SECTION COMMON */
+.section {
+  padding: 6rem 5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-alt {
+  background: var(--bg-soft);
+}
+
+.section-dark {
+  background: var(--bg-dark);
+  color: #f0ece4;
+}
+
+/* SECTION HEADER */
+.section-header {
+  margin-bottom: 4rem;
+}
+
+.section-tag {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.section-tag::before {
+  content: '';
+  display: block;
+  width: 1.5rem;
+  height: 2px;
+  background: var(--accent);
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.section-dark .section-title {
+  color: #f0ece4;
+}
+
+.section-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.section-sub {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: var(--text-mid);
+  max-width: 52ch;
+  line-height: 1.8;
+}
+
+.section-dark .section-sub {
+  color: #9a9588;
+}
+
+/* SERVICES */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.service-card {
+  background: var(--bg);
+  padding: 3rem 2.5rem;
+  transition: background 0.25s;
+}
+
+.section-alt .service-card {
+  background: var(--bg-soft);
+}
+
+.service-card:hover {
+  background: var(--accent-light);
+}
+
+.service-num {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent-light);
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+.service-card:hover .service-num {
+  color: var(--accent);
+}
+
+.service-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.01em;
+}
+
+.service-card p {
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  line-height: 1.8;
+}
+
+/* DOTA SECTION */
+.dota-layout {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.dota-heroes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.1);
+  margin-top: 2.5rem;
+}
+
+.hero-tile {
+  background: rgba(255,255,255,0.04);
+  padding: 2rem 1.5rem;
+  border-right: none;
+  transition: background 0.2s;
+}
+
+.hero-tile:hover {
+  background: rgba(181,135,74,0.15);
+}
+
+.hero-tile-icon {
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+}
+
+.hero-tile-name {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f0ece4;
+  margin-bottom: 0.3rem;
+}
+
+.hero-tile-role {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6a6660;
+}
+
+.dota-text p {
+  font-size: 0.9rem;
+  color: #9a9588;
+  line-height: 1.9;
+  margin-bottom: 1.2rem;
+}
+
+.dota-highlight {
+  border-left: 3px solid var(--accent);
+  padding-left: 1.5rem;
+  margin: 2rem 0;
+}
+
+.dota-highlight p {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: #d8d0c4;
+  line-height: 1.6;
+}
+
+/* PROCESS */
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.process-step {
+  padding: 2.5rem 2.5rem 2.5rem 0;
+  border-right: 1px solid var(--border);
+  padding-right: 2.5rem;
+  margin-right: 0;
+}
+
+.process-step:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.process-step:not(:first-child) {
+  padding-left: 2.5rem;
+}
+
+.step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+
+.process-step h4 {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.01em;
+}
+
+.process-step p {
+  font-size: 0.85rem;
+  color: var(--text-mid);
+  line-height: 1.8;
+}
+
+/* CONTACT */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 6rem;
+  align-items: start;
+}
+
+.contact-info-block {
+  margin-top: 3rem;
+}
+
+.contact-row {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+
+.contact-row:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.contact-row-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  font-weight: 500;
+  min-width: 5rem;
+  padding-top: 0.1rem;
+}
+
+.contact-row-value {
+  font-size: 0.88rem;
+  color: var(--text-mid);
+}
+
+/* FORM */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group.full { grid-column: 1 / -1; }
+
+.form-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  border-color: var(--accent);
+}
+
+.form-textarea {
+  resize: none;
+  height: 100px;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--text-light);
+}
+
+/* FOOTER */
+footer {
+  background: var(--text);
+  color: #9a9588;
+  padding: 3rem 5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-logo {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f0ece4;
+}
+
+.footer-logo span { color: var(--accent); }
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.footer-links a {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6a6660;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover { color: #f0ece4; }
+
+.footer-copy {
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: #6a6660;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up { animation: fadeUp 0.8s ease both; }
+.d1 { animation-delay: 0.05s; }
+.d2 { animation-delay: 0.15s; }
+.d3 { animation-delay: 0.28s; }
+.d4 { animation-delay: 0.4s; }
+
+@media (max-width: 960px) {
+  nav, .section, footer { padding-left: 2rem; padding-right: 2rem; }
+  .hero { grid-template-columns: 1fr; padding: 7rem 2rem 4rem; }
+  .hero-right { height: 260px; }
+  .services-grid { grid-template-columns: 1fr; }
+  .dota-layout, .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+  .process-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .process-step { border-right: none; padding: 1.5rem 0; }
+  .form-row { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+  .dota-heroes-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ===== TUTORIAL GUIADO ===== */
+#tour-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+#tour-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.tour-highlight {
+  position: absolute;
+  border-radius: 6px;
+  box-shadow: 0 0 0 4px var(--accent), 0 0 0 9999px rgba(17,16,16,0.55);
+  transition: all 0.35s ease;
+  pointer-events: none;
+}
+
+.tour-tooltip {
+  position: absolute;
+  max-width: 320px;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  padding: 1.4rem 1.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  z-index: 999;
+  transition: all 0.35s ease;
+}
+
+.tour-tooltip::before {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  transform: rotate(45deg);
+}
+
+.tour-tooltip[data-arrow="top"]::before {
+  top: -7px; left: 30px;
+  border-bottom: none; border-right: none;
+}
+
+.tour-tooltip[data-arrow="bottom"]::before {
+  bottom: -7px; left: 30px;
+  border-top: none; border-left: none;
+}
+
+.tour-step-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.tour-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.tour-desc {
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+  margin-bottom: 1.2rem;
+}
+
+.tour-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.tour-progress {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  letter-spacing: 0.05em;
+}
+
+.tour-btn {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 0.55rem 1.1rem;
+  border: 2px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.tour-btn:hover { background: var(--text); border-color: var(--text); }
+
+.tour-btn-skip {
+  background: transparent;
+  color: var(--text-light);
+  border: none;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.tour-btn-skip:hover { color: var(--text-mid); }
+
+/* Banner inicial de bienvenida */
+#tour-welcome {
+  position: fixed;
+  bottom: 1.8rem;
+  right: 1.8rem;
+  z-index: 997;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  padding: 1.3rem 1.5rem;
+  max-width: 300px;
+  animation: fadeUp 0.6s ease 0.4s both;
+}
+
+#tour-welcome p {
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+#tour-welcome .tour-welcome-title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+#tour-welcome-actions {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+/* Botón flotante para relanzar el tutorial */
+#tour-relaunch {
+  position: fixed;
+  bottom: 1.8rem;
+  right: 1.8rem;
+  z-index: 90;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+#tour-relaunch:hover { transform: scale(1.08); }
+
+@media (max-width: 960px) {
+  .tour-tooltip { max-width: 88vw; left: 6vw !important; right: 6vw !important; }
+  #tour-welcome { right: 1rem; left: 1rem; bottom: 1rem; max-width: none; z-index: 997; }
+  #tour-relaunch { right: 1rem; bottom: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- TUTORIAL: banner de bienvenida -->
+<div id="tour-welcome">
+  <p class="tour-welcome-title">¿Primera vez aquí? 👋</p>
+  <p>Te mostramos en 30 segundos cómo pedir tu figura paso a paso.</p>
+  <div id="tour-welcome-actions">
+    <button class="tour-btn" onclick="startTour()">Iniciar tutorial</button>
+    <button class="tour-btn-skip" onclick="closeWelcome()">Omitir (opcional)</button>
+  </div>
+</div>
+
+<!-- TUTORIAL: overlay + highlight + tooltip -->
+<div id="tour-overlay">
+  <div class="tour-highlight" id="tour-highlight"></div>
+  <div class="tour-tooltip" id="tour-tooltip" data-arrow="top">
+    <p class="tour-step-label" id="tour-step-label">Paso 1 de 6</p>
+    <p class="tour-title" id="tour-title-text"></p>
+    <p class="tour-desc" id="tour-desc-text"></p>
+    <div class="tour-nav">
+      <span class="tour-progress" id="tour-progress-text"></span>
+      <div style="display:flex; gap:0.6rem;">
+        <button class="tour-btn-skip" onclick="endTour()">Salir</button>
+        <button class="tour-btn" id="tour-next-btn" onclick="nextTourStep()">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TUTORIAL: botón flotante para relanzar -->
+<button id="tour-relaunch" onclick="startTour()" title="Ver tutorial">?</button>
+
+<!-- NAV -->
+<nav id="tour-nav">
+  <a href="#" class="nav-logo">Sunder<span> 3D</span></a>
+  <ul class="nav-links">
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#dota2">Dota 2</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#personalizar" style="color:var(--accent);font-weight:500;">Personalizar</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="tour-hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow fade-up d1">Arequipa, Perú</p>
+    <h1 class="fade-up d2">Figuras 3D que<br><em>cobran vida</em></h1>
+    <p class="hero-desc fade-up d3">Modelado e impresión 3D de alta precisión para figuras de anime, videojuegos y personajes de Dota 2. Cada pieza, una obra de detalle artesanal.</p>
+    <div class="hero-cta fade-up d4">
+      <a href="#contacto" class="btn-primary">Solicitar cotización</a>
+      <a href="#servicios" class="btn-ghost">Ver servicios</a>
+    </div>
+    <div class="hero-stats fade-up d4">
+      <div>
+        <div class="hero-stat-num">3D</div>
+        <div class="hero-stat-label">Alta resolución</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">100%</div>
+        <div class="hero-stat-label">A medida</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">Dota 2</div>
+        <div class="hero-stat-label">Especialidad</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right fade-up d3" style="padding:0; overflow:hidden; position:relative;">
+    <iframe src="https://www.canva.com/design/DAG-EdqyMcs/5iQMYp9chXQtsJw_bFaLPA/view?embed" style="width:100%; height:100%; border:none; display:block;" allowfullscreen loading="lazy" title="Galería de figuras Sunder 3D"></iframe>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="section section-alt" id="servicios">
+  <div class="section-header">
+    <p class="section-tag">Servicios</p>
+    <h2 class="section-title">Lo que <em>ofrecemos</em></h2>
+    <p class="section-sub">Desde el diseño digital hasta la pieza terminada, nos encargamos de todo el proceso con atención al detalle.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <h3>Modelado 3D</h3>
+      <p>Diseño digital de alta fidelidad a partir de referencias del personaje. Capturamos anatomía, texturas y equipamiento para una reproducción exacta antes de imprimir.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <h3>Impresión 3D</h3>
+      <p>Impresión de precisión en resina y PLA con capas ultrafinas. Ideal para figuras de colección con acabados lisos y detalles complejos que requieren máxima resolución.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <h3>Acabado &amp; Pintura</h3>
+      <p>Postproceso completo: lijado, imprimado, pintura acrílica y barnizado final. La figura sale lista para exhibición con colores fieles al diseño original.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DOTA 2 -->
+<section class="section section-dark" id="dota2">
+  <div class="dota-layout">
+    <div>
+      <div class="section-header">
+        <p class="section-tag">Especialidad</p>
+        <h2 class="section-title">Expertos en<br><em>Dota 2</em></h2>
+      </div>
+      <div class="dota-text">
+        <p>Nuestra mayor especialización es el universo de Dota 2. Conocemos a la perfección la estética, proporciones y detalles de cada héroe, lo que nos permite ofrecer figuras de máxima fidelidad para los fans más exigentes.</p>
+        <p>Trabajamos cualquier héroe del juego, incluyendo sus variantes de sets, arcanas e immortals. También realizamos figuras personalizadas con skins específicos a pedido.</p>
+        <div class="dota-highlight">
+          <p>"Cada héroe tiene una historia — nosotros la convertimos en una pieza que puedes sostener."</p>
+        </div>
+        <a href="#contacto" class="btn-primary" style="margin-top:1rem;">Pedir tu héroe</a>
+      </div>
+    </div>
+    <div>
+      <div class="dota-heroes-grid">
+        <div class="hero-tile">
+          <div class="hero-tile-icon">⚔</div>
+          <div class="hero-tile-name">Anti-Mage</div>
+          <div class="hero-tile-role">Carry</div>
+        </div>
+        <div class="hero-tile">
+          <div class="hero-tile-icon">🐉</div>
+          <div class="hero-tile-name">Dragon Knight</div>
+          <div class="hero-tile-role">Carry / Offlane</div>
+        </div>
+        <div class="hero-tile">
+          <div class="hero-tile-icon">🌑</div>
+          <div class="hero-tile-name">Phantom Assassin</div>
+          <div class="hero-tile-role">Carry</div>
+        </div>
+        <div class="hero-tile">
+          <div class="hero-tile-icon">⚡</div>
+          <div class="hero-tile-name">Zeus</div>
+          <div class="hero-tile-role">Mid</div>
+        </div>
+        <div class="hero-tile">
+          <div class="hero-tile-icon">🏹</div>
+          <div class="hero-tile-name">Drow Ranger</div>
+          <div class="hero-tile-role">Carry</div>
+        </div>
+        <div class="hero-tile">
+          <div class="hero-tile-icon">🔥</div>
+          <div class="hero-tile-name">Lina</div>
+          <div class="hero-tile-role">Mid / Support</div>
+        </div>
+        <div class="hero-tile">
+          <div class="hero-tile-icon">🧊</div>
+          <div class="hero-tile-name">Crystal Maiden</div>
+          <div class="hero-tile-role">Support</div>
+        </div>
+        <div class="hero-tile">
+          <div class="hero-tile-icon">🗡</div>
+          <div class="hero-tile-name">Juggernaut</div>
+          <div class="hero-tile-role">Carry</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section" id="proceso">
+  <div class="section-header">
+    <p class="section-tag">Cómo trabajamos</p>
+    <h2 class="section-title">El <em>proceso</em> de tu figura</h2>
+    <p class="section-sub">Un flujo claro y transparente de inicio a fin, para que siempre sepas en qué etapa está tu pedido.</p>
+  </div>
+  <div class="process-grid">
+    <div class="process-step">
+      <div class="step-badge">01</div>
+      <h4>Consulta</h4>
+      <p>Recibimos tu solicitud con el personaje, pose y referencias visuales. Evaluamos viabilidad y te entregamos una cotización detallada sin compromiso.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-badge">02</div>
+      <h4>Modelado</h4>
+      <p>Construimos el modelo 3D digital con total fidelidad al personaje. Antes de imprimir, te enviamos renders para tu aprobación y ajustes.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-badge">03</div>
+      <h4>Impresión</h4>
+      <p>Imprimimos en alta resolución con los mejores materiales según el uso final: exhibición, colección o regalo. Control de calidad en cada etapa.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-badge">04</div>
+      <h4>Entrega</h4>
+      <p>Acabado final, pintura si aplica, y empaque seguro. Entrega presencial en Arequipa o envío a cualquier ciudad del Perú.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONALIZAR -->
+<section class="section" id="personalizar">
+  <div class="section-header">
+    <p class="section-tag">Sunder View 360°</p>
+    <h2 class="section-title">Personaliza tu <em>figura</em></h2>
+    <p class="section-sub">Elige tu personaje, ajusta colores, pose y tamaño. Te enviamos la cotización por WhatsApp.</p>
+  </div>
+
+  <!-- STEPS -->
+  <div style="display:flex; gap:0; margin-bottom:2.5rem; border:1px solid var(--border);">
+    <div class="pers-step active-step" data-step="1" onclick="goStep(1)" style="flex:1; padding:1rem 1.2rem; border-right:1px solid var(--border); cursor:pointer; text-align:center;">
+      <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); font-weight:600;">01</div>
+      <div style="font-size:0.85rem; font-weight:500; margin-top:0.2rem;">Personaje</div>
+    </div>
+    <div class="pers-step" data-step="2" onclick="goStep(2)" style="flex:1; padding:1rem 1.2rem; border-right:1px solid var(--border); cursor:pointer; text-align:center;">
+      <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-light); font-weight:600;">02</div>
+      <div style="font-size:0.85rem; font-weight:500; margin-top:0.2rem; color:var(--text-light);">Personalización</div>
+    </div>
+    <div class="pers-step" data-step="3" onclick="goStep(3)" style="flex:1; padding:1rem 1.2rem; border-right:1px solid var(--border); cursor:pointer; text-align:center;">
+      <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-light); font-weight:600;">03</div>
+      <div style="font-size:0.85rem; font-weight:500; margin-top:0.2rem; color:var(--text-light);">Vista previa</div>
+    </div>
+    <div class="pers-step" data-step="4" onclick="goStep(4)" style="flex:1; padding:1rem 1.2rem; border-right:1px solid var(--border); cursor:pointer; text-align:center;">
+      <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-light); font-weight:600;">04</div>
+      <div style="font-size:0.85rem; font-weight:500; margin-top:0.2rem; color:var(--text-light);">Confirmar</div>
+    </div>
+    <div class="pers-step" data-step="5" onclick="goStep(5)" style="flex:1; padding:1rem 1.2rem; cursor:pointer; text-align:center;">
+      <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-light); font-weight:600;">05</div>
+      <div style="font-size:0.85rem; font-weight:500; margin-top:0.2rem; color:var(--text-light);">Detalles (opcional)</div>
+    </div>
+  </div>
+
+  <!-- STEP 1: Categoría -->
+  <div id="step1" class="pers-panel">
+    <p style="font-size:0.8rem; color:var(--text-mid); margin-bottom:1.5rem;">Selecciona la categoría y escribe el personaje que quieres.</p>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:2rem;">
+      <div class="cat-card active-cat" onclick="selectCat(this,'DOTA 2')" data-cat="DOTA 2" style="background:var(--bg); padding:2rem 1rem; text-align:center; cursor:pointer; transition:background 0.2s;">
+        <div style="font-size:2rem; margin-bottom:0.5rem;">🎮</div>
+        <div style="font-size:0.85rem; font-weight:600;">DOTA 2</div>
+      </div>
+      <div class="cat-card" onclick="selectCat(this,'ANIME')" data-cat="ANIME" style="background:var(--bg); padding:2rem 1rem; text-align:center; cursor:pointer; border-left:1px solid var(--border); transition:background 0.2s;">
+        <div style="font-size:2rem; margin-bottom:0.5rem;">⚡</div>
+        <div style="font-size:0.85rem; font-weight:600;">ANIME</div>
+      </div>
+      <div class="cat-card" onclick="selectCat(this,'VIDEOJUEGOS')" data-cat="VIDEOJUEGOS" style="background:var(--bg); padding:2rem 1rem; text-align:center; cursor:pointer; border-left:1px solid var(--border); transition:background 0.2s;">
+        <div style="font-size:2rem; margin-bottom:0.5rem;">🕹</div>
+        <div style="font-size:0.85rem; font-weight:600;">VIDEOJUEGOS</div>
+      </div>
+      <div class="cat-card" onclick="selectCat(this,'PERSONALIZADO')" data-cat="PERSONALIZADO" style="background:var(--bg); padding:2rem 1rem; text-align:center; cursor:pointer; border-left:1px solid var(--border); transition:background 0.2s;">
+        <div style="font-size:2rem; margin-bottom:0.5rem;">✏️</div>
+        <div style="font-size:0.85rem; font-weight:600;">PERSONALIZADO</div>
+      </div>
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <label class="form-label">Nombre del personaje</label>
+      <input type="text" class="form-input" id="char-name" placeholder="Ej: Anti-Mage, Naruto, Kratos..." style="max-width:400px;" />
+    </div>
+    <button class="btn-primary" onclick="goStep(2)">Siguiente →</button>
+  </div>
+
+  <!-- STEP 2: Personalización -->
+  <div id="step2" class="pers-panel" style="display:none;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start;">
+      <div>
+        <div class="form-group">
+          <label class="form-label">Color principal</label>
+          <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.4rem;">
+            <div class="color-dot active-color" onclick="selectColor(this,'#c0392b')" style="width:28px;height:28px;background:#c0392b;border-radius:50%;cursor:pointer;border:2px solid transparent;"></div>
+            <div class="color-dot" onclick="selectColor(this,'#1a1a1a')" style="width:28px;height:28px;background:#1a1a1a;border-radius:50%;cursor:pointer;border:2px solid transparent;"></div>
+            <div class="color-dot" onclick="selectColor(this,'#2c3e50')" style="width:28px;height:28px;background:#2c3e50;border-radius:50%;cursor:pointer;border:2px solid transparent;"></div>
+            <div class="color-dot" onclick="selectColor(this,'#b5874a')" style="width:28px;height:28px;background:#b5874a;border-radius:50%;cursor:pointer;border:2px solid transparent;"></div>
+            <div class="color-dot" onclick="selectColor(this,'#7f8c8d')" style="width:28px;height:28px;background:#7f8c8d;border-radius:50%;cursor:pointer;border:2px solid transparent;"></div>
+            <div class="color-dot" onclick="selectColor(this,'#2980b9')" style="width:28px;height:28px;background:#2980b9;border-radius:50%;cursor:pointer;border:2px solid transparent;"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tamaño</label>
+          <div style="display:flex; gap:0.5rem; margin-top:0.4rem;">
+            <button class="size-btn" onclick="selectSize(this,'S')" style="padding:0.5rem 1.2rem; border:1px solid var(--border); background:var(--bg-soft); font-size:0.8rem; cursor:pointer;">S</button>
+            <button class="size-btn active-size" onclick="selectSize(this,'M')" style="padding:0.5rem 1.2rem; border:1px solid var(--accent); background:var(--accent-light); font-size:0.8rem; cursor:pointer;">M</button>
+            <button class="size-btn" onclick="selectSize(this,'L')" style="padding:0.5rem 1.2rem; border:1px solid var(--border); background:var(--bg-soft); font-size:0.8rem; cursor:pointer;">L</button>
+            <button class="size-btn" onclick="selectSize(this,'XL')" style="padding:0.5rem 1.2rem; border:1px solid var(--border); background:var(--bg-soft); font-size:0.8rem; cursor:pointer;">XL</button>
+          </div>
+          <p style="font-size:0.7rem; color:var(--text-light); margin-top:0.5rem;">S=10cm · M=18cm · L=25cm · XL=35cm</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pose</label>
+          <div style="display:flex; gap:0.5rem; margin-top:0.4rem;">
+            <button class="pose-btn active-pose" onclick="selectPose(this,'Estática')" style="padding:0.5rem 1rem; border:1px solid var(--accent); background:var(--accent-light); font-size:0.75rem; cursor:pointer;">Estática</button>
+            <button class="pose-btn" onclick="selectPose(this,'Combate')" style="padding:0.5rem 1rem; border:1px solid var(--border); background:var(--bg-soft); font-size:0.75rem; cursor:pointer;">Combate</button>
+            <button class="pose-btn" onclick="selectPose(this,'Corriendo')" style="padding:0.5rem 1rem; border:1px solid var(--border); background:var(--bg-soft); font-size:0.75rem; cursor:pointer;">Corriendo</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Accesorios / detalles extras</label>
+          <textarea class="form-textarea" id="extras-text" placeholder="Ej: con espada, base decorada, sin casco..." style="height:70px;"></textarea>
+        </div>
+      </div>
+      <!-- Resumen -->
+      <div style="background:var(--bg-soft); border:1px solid var(--border); padding:2rem;">
+        <p style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:1.2rem;">Resumen de tu figura</p>
+        <div style="display:flex; flex-direction:column; gap:0.8rem;">
+          <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:0.6rem;">
+            <span style="font-size:0.78rem; color:var(--text-light);">Personaje</span>
+            <span style="font-size:0.78rem; font-weight:500;" id="sum-char">—</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:0.6rem;">
+            <span style="font-size:0.78rem; color:var(--text-light);">Categoría</span>
+            <span style="font-size:0.78rem; font-weight:500;" id="sum-cat">DOTA 2</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:0.6rem;">
+            <span style="font-size:0.78rem; color:var(--text-light);">Tamaño</span>
+            <span style="font-size:0.78rem; font-weight:500;" id="sum-size">M (18 cm)</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:0.6rem;">
+            <span style="font-size:0.78rem; color:var(--text-light);">Pose</span>
+            <span style="font-size:0.78rem; font-weight:500;" id="sum-pose">Estática</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.78rem; color:var(--text-light);">Color principal</span>
+            <div id="sum-color" style="width:20px;height:20px;border-radius:50%;background:#c0392b;border:1px solid var(--border);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; gap:1rem; margin-top:2rem;">
+      <button class="btn-ghost" onclick="goStep(1)">← Atrás</button>
+      <button class="btn-primary" onclick="goStep(3)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Vista previa -->
+  <div id="step3" class="pers-panel" style="display:none;">
+    <div style="display:grid; grid-template-columns:2fr 1fr; gap:3rem; align-items:start;">
+      <div style="background:var(--bg-soft); border:1px solid var(--border); min-height:340px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:2rem; position:relative;">
+        <div style="font-size:5rem; line-height:1;" id="preview-icon">🤺</div>
+        <p style="font-size:0.8rem; font-weight:600;" id="preview-name">Tu personaje</p>
+        <p style="font-size:0.72rem; color:var(--text-light);">Vista previa aproximada — el modelo real puede variar</p>
+        <div style="position:absolute; bottom:1rem; right:1rem; display:flex; gap:0.5rem;">
+          <span style="font-size:0.65rem; background:var(--accent-light); color:var(--accent); padding:0.3rem 0.6rem; font-weight:600;">360°</span>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:1rem;">Información técnica</p>
+        <div style="display:flex; flex-direction:column; gap:0.6rem;">
+          <div style="font-size:0.8rem; color:var(--text-mid);">Material: <strong style="color:var(--text);">Resina / PLA</strong></div>
+          <div style="font-size:0.8rem; color:var(--text-mid);">Altura: <strong style="color:var(--text);" id="info-size">18 cm</strong></div>
+          <div style="font-size:0.8rem; color:var(--text-mid);">Acabado: <strong style="color:var(--text);">Pintado a mano</strong></div>
+          <div style="font-size:0.8rem; color:var(--text-mid);">Tiempo estimado: <strong style="color:var(--text);">2–3 semanas</strong></div>
+        </div>
+        <div style="margin-top:1.5rem; padding:1rem; background:var(--accent-light); border-left:3px solid var(--accent);">
+          <p style="font-size:0.78rem; color:var(--accent-dark, #7a5c2a); line-height:1.6;">Esta es una <strong>vista referencial</strong>. El modelo final se validará contigo antes de imprimir.</p>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; gap:1rem; margin-top:2rem;">
+      <button class="btn-ghost" onclick="goStep(2)">← Atrás</button>
+      <button class="btn-primary" onclick="goStep(4)">Aprobar diseño ✓</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Confirmar -->
+  <div id="step4" class="pers-panel" style="display:none;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start;">
+      <div>
+        <p style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:1.5rem;">Tus datos de contacto</p>
+        <div class="form-group">
+          <label class="form-label">Nombre completo</label>
+          <input type="text" class="form-input" id="conf-nombre" placeholder="Tu nombre" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">WhatsApp</label>
+          <input type="text" class="form-input" id="conf-wsp" placeholder="+51 9XX XXX XXX" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ciudad / Distrito</label>
+          <input type="text" class="form-input" id="conf-ciudad" placeholder="Ej: Arequipa, Cercado" />
+        </div>
+      </div>
+      <div style="background:var(--bg-soft); border:1px solid var(--border); padding:2rem;">
+        <p style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:1.2rem;">Resumen final</p>
+        <div id="final-summary" style="font-size:0.82rem; color:var(--text-mid); line-height:2;">
+          Cargando resumen...
+        </div>
+        <div style="margin-top:1.5rem; padding:1rem; border:1px dashed var(--border);">
+          <p style="font-size:0.75rem; color:var(--text-light);">Al enviar, recibirás confirmación por WhatsApp con el presupuesto y tiempo de entrega estimado.</p>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; gap:1rem; margin-top:2rem;">
+      <button class="btn-ghost" onclick="goStep(3)">← Atrás</button>
+      <button class="btn-primary" onclick="goStep(5)" style="background:#25d366; border-color:#25d366;">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: Detalles adicionales (opcional) -->
+  <div id="step5" class="pers-panel" style="display:none;">
+    <p style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:0.6rem;">Último paso — totalmente opcional</p>
+    <p style="font-size:0.8rem; color:var(--text-mid); margin-bottom:1.5rem; max-width:60ch;">¿Quieres agregar algo más antes de enviar tu pedido? Puedes adjuntar referencias, links de imágenes, o cualquier detalle especial que quieras que tomemos en cuenta. Si no necesitas nada más, puedes saltar este paso.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start;">
+      <div>
+        <div class="form-group">
+          <label class="form-label">Detalles adicionales (opcional)</label>
+          <textarea class="form-textarea" id="extra-detalles" placeholder="Ej: referencia en este link, prefiero el casco distinto al original, quiero una base con el logo de mi equipo..." style="height:130px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Link de referencia (opcional)</label>
+          <input type="text" class="form-input" id="extra-link" placeholder="https://..." />
+        </div>
+      </div>
+      <div style="background:var(--bg-soft); border:1px solid var(--border); padding:2rem;">
+        <p style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:1.2rem;">¿Por qué este paso?</p>
+        <p style="font-size:0.8rem; color:var(--text-mid); line-height:1.8;">Cualquier detalle extra nos ayuda a afinar el diseño antes de empezar a modelar. No es obligatorio — si prefieres, conversamos los detalles directamente por WhatsApp.</p>
+      </div>
+    </div>
+    <div style="display:flex; gap:1rem; margin-top:2rem;">
+      <button class="btn-ghost" onclick="goStep(4)">← Atrás</button>
+      <button class="btn-ghost" onclick="enviarPedido()">Omitir y enviar</button>
+      <button class="btn-primary" onclick="enviarPedido()" style="background:#25d366; border-color:#25d366;">Enviar por WhatsApp 📲</button>
+    </div>
+    <div id="confirm-msg" style="display:none; margin-top:1.5rem; padding:1.2rem; background:#f0faf3; border:1px solid #b7e4c7; color:#1a7a3c; font-size:0.85rem;">
+      ✓ ¡Pedido enviado! Te contactaremos al WhatsApp ingresado en las próximas horas.
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section section-alt" id="contacto">
+  <div class="contact-layout">
+    <div>
+      <div class="section-header">
+        <p class="section-tag">Contacto</p>
+        <h2 class="section-title">Hagamos tu figura<br><em>realidad</em></h2>
+        <p class="section-sub">Cuéntanos qué personaje quieres y te asesoramos sobre materiales, tamaños y tiempos de entrega.</p>
+      </div>
+      <div class="contact-info-block">
+        <div class="contact-row">
+          <span class="contact-row-label">Ciudad</span>
+          <span class="contact-row-value">Arequipa, Perú</span>
+        </div>
+        <div class="contact-row">
+          <span class="contact-row-label">WhatsApp</span>
+          <span class="contact-row-value">+51 928 570 482</span>
+        </div>
+        <div class="contact-row">
+          <span class="contact-row-label">TikTok</span>
+          <span class="contact-row-value">Sunder 3D</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+        <div class="form-group">
+          <label class="form-label">Nombre</label>
+          <input type="text" class="form-input" placeholder="Tu nombre" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Correo</label>
+          <input type="email" class="form-input" placeholder="correo@ejemplo.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Personaje</label>
+          <input type="text" class="form-input" placeholder="Ej: Anti-Mage Arcana" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tamaño</label>
+          <select class="form-select">
+            <option value="">Seleccionar...</option>
+            <option>Pequeño (10–15 cm)</option>
+            <option>Mediano (20–25 cm)</option>
+            <option>Grande (30+ cm)</option>
+          </select>
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">Mensaje</label>
+          <textarea class="form-textarea" placeholder="Cuéntanos más sobre tu pedido, referencias, colores, etc."></textarea>
+        </div>
+      </div>
+      <button class="btn-primary" style="width:100%; cursor:pointer; border:none;">Enviar solicitud</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">Sunder<span> 3D</span></span>
+  <ul class="footer-links">
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#dota2">Dota 2</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <span class="footer-copy">© 2026 Sunder 3D — Arequipa, Perú</span>
+</footer>
+<style>
+.active-step { background: var(--accent-light) !important; }
+.active-step div:first-child { color: var(--accent) !important; }
+.active-step div:last-child { color: var(--text) !important; font-weight: 600; }
+.active-cat { background: var(--accent-light) !important; outline: 2px solid var(--accent); }
+.active-color { outline: 3px solid var(--accent); outline-offset: 2px; }
+.active-size { border-color: var(--accent) !important; background: var(--accent-light) !important; }
+.active-pose { border-color: var(--accent) !important; background: var(--accent-light) !important; }
+</style>
+<script>
+let state = { cat: 'DOTA 2', char: '', size: 'M', pose: 'Estática', color: '#c0392b', extras: '' };
+const sizeMap = { S:'10 cm', M:'18 cm', L:'25 cm', XL:'35 cm' };
+const catEmoji = { 'DOTA 2':'🤺', 'ANIME':'⚡', 'VIDEOJUEGOS':'🕹', 'PERSONALIZADO':'✏️' };
+
+function goStep(n) {
+  // update state from inputs
+  state.char = document.getElementById('char-name')?.value || state.char;
+  state.extras = document.getElementById('extras-text')?.value || state.extras;
+
+  // hide all panels
+  document.querySelectorAll('.pers-panel').forEach(p => p.style.display = 'none');
+  document.getElementById('step' + n).style.display = 'block';
+
+  // update step indicators
+  document.querySelectorAll('.pers-step').forEach(s => {
+    const sn = parseInt(s.dataset.step);
+    s.classList.remove('active-step');
+    const label = s.querySelector('div:last-child');
+    const num = s.querySelector('div:first-child');
+    if (sn === n) {
+      s.classList.add('active-step');
+    } else {
+      label.style.color = sn < n ? 'var(--text-mid)' : 'var(--text-light)';
+      num.style.color = sn < n ? 'var(--accent)' : 'var(--text-light)';
+    }
+  });
+
+  // update summary
+  updateSummary();
+
+  // scroll to section
+  document.getElementById('personalizar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function selectCat(el, cat) {
+  state.cat = cat;
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active-cat'));
+  el.classList.add('active-cat');
+  document.getElementById('sum-cat').textContent = cat;
+}
+
+function selectColor(el, color) {
+  state.color = color;
+  document.querySelectorAll('.color-dot').forEach(c => c.classList.remove('active-color'));
+  el.classList.add('active-color');
+  const sc = document.getElementById('sum-color');
+  if (sc) sc.style.background = color;
+}
+
+function selectSize(el, size) {
+  state.size = size;
+  document.querySelectorAll('.size-btn').forEach(b => {
+    b.classList.remove('active-size');
+    b.style.borderColor = 'var(--border)';
+    b.style.background = 'var(--bg-soft)';
+  });
+  el.classList.add('active-size');
+  el.style.borderColor = 'var(--accent)';
+  el.style.background = 'var(--accent-light)';
+  document.getElementById('sum-size').textContent = size + ' (' + sizeMap[size] + ')';
+  const is = document.getElementById('info-size');
+  if (is) is.textContent = sizeMap[size];
+}
+
+function selectPose(el, pose) {
+  state.pose = pose;
+  document.querySelectorAll('.pose-btn').forEach(b => {
+    b.classList.remove('active-pose');
+    b.style.borderColor = 'var(--border)';
+    b.style.background = 'var(--bg-soft)';
+  });
+  el.classList.add('active-pose');
+  el.style.borderColor = 'var(--accent)';
+  el.style.background = 'var(--accent-light)';
+  document.getElementById('sum-pose').textContent = pose;
+}
+
+function updateSummary() {
+  state.char = document.getElementById('char-name')?.value || state.char;
+  const sc = document.getElementById('sum-char');
+  if (sc) sc.textContent = state.char || '—';
+  const pn = document.getElementById('preview-name');
+  if (pn) pn.textContent = state.char || 'Tu personaje';
+  const pi = document.getElementById('preview-icon');
+  if (pi) pi.textContent = catEmoji[state.cat] || '🤺';
+
+  const fs = document.getElementById('final-summary');
+  if (fs) fs.innerHTML = `
+    <div>Personaje: <strong style="color:var(--text)">${state.char || '—'}</strong></div>
+    <div>Categoría: <strong style="color:var(--text)">${state.cat}</strong></div>
+    <div>Tamaño: <strong style="color:var(--text)">${state.size} — ${sizeMap[state.size]}</strong></div>
+    <div>Pose: <strong style="color:var(--text)">${state.pose}</strong></div>
+    <div>Extras: <strong style="color:var(--text)">${state.extras || 'Ninguno'}</strong></div>
+  `;
+}
+
+function enviarPedido() {
+  const nombre = document.getElementById('conf-nombre')?.value || '';
+  const ciudad = document.getElementById('conf-ciudad')?.value || '';
+  const wsp = document.getElementById('conf-wsp')?.value || '';
+  if (!nombre || !wsp) { alert('Por favor ingresa tu nombre y WhatsApp.'); goStep(4); return; }
+
+  const detalles = document.getElementById('extra-detalles')?.value || '';
+  const link = document.getElementById('extra-link')?.value || '';
+
+  let msg = `Hola Sunder 3D! Quiero pedir una figura:\n` +
+    `• Personaje: ${state.char || '—'}\n` +
+    `• Categoría: ${state.cat}\n` +
+    `• Tamaño: ${state.size} (${sizeMap[state.size]})\n` +
+    `• Pose: ${state.pose}\n` +
+    `• Extras: ${state.extras || 'Ninguno'}\n` +
+    `• Mi nombre: ${nombre}\n` +
+    `• Ciudad: ${ciudad}`;
+
+  if (detalles) msg += `\n• Detalles adicionales: ${detalles}`;
+  if (link) msg += `\n• Referencia: ${link}`;
+
+  window.open(`https://wa.me/51928570482?text=${encodeURIComponent(msg)}`, '_blank');
+  document.getElementById('confirm-msg').style.display = 'block';
+}
+
+/* ===== TUTORIAL GUIADO ===== */
+const tourSteps = [
+  {
+    selector: '#tour-nav',
+    title: 'Menú de navegación',
+    desc: 'Desde aquí saltas directo a cualquier sección: Servicios, Dota 2, Proceso, Personalizar o Contacto.',
+    arrow: 'top'
+  },
+  {
+    selector: '#tour-hero',
+    title: 'Bienvenida',
+    desc: 'Esta es la portada de Sunder 3D. Aquí puedes ver una galería de figuras ya entregadas a otros clientes.',
+    arrow: 'top'
+  },
+  {
+    selector: '#servicios',
+    title: 'Nuestros servicios',
+    desc: 'Aquí explicamos las 3 etapas de cada pedido: modelado 3D, impresión y acabado/pintura.',
+    arrow: 'top'
+  },
+  {
+    selector: '#dota2',
+    title: 'Especialidad en Dota 2',
+    desc: 'Si tu personaje es de Dota 2, esta sección muestra nuestra experiencia específica con héroes del juego.',
+    arrow: 'top'
+  },
+  {
+    selector: '#proceso',
+    title: 'Cómo trabajamos',
+    desc: 'El proceso completo de tu figura, desde el diseño hasta la entrega en Arequipa o a nivel nacional.',
+    arrow: 'top'
+  },
+  {
+    selector: '#personalizar',
+    title: '¡La parte más importante!',
+    desc: 'Aquí armas tu pedido en 5 pasos: elige tu personaje, personalízalo (color, tamaño, pose), revisa la vista previa, confirma tus datos de contacto y, si quieres, agrega detalles extra. Al final todo se envía directo por WhatsApp.',
+    arrow: 'top'
+  }
+];
+
+let tourIndex = 0;
+
+function closeWelcome() {
+  const w = document.getElementById('tour-welcome');
+  if (w) w.style.display = 'none';
+  const relaunch = document.getElementById('tour-relaunch');
+  if (relaunch) relaunch.style.display = 'flex';
+}
+
+function startTour() {
+  closeWelcome();
+  tourIndex = 0;
+  document.getElementById('tour-overlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  showTourStep();
+}
+
+function endTour() {
+  document.getElementById('tour-overlay').classList.remove('active');
+  document.body.style.overflow = '';
+  const relaunch = document.getElementById('tour-relaunch');
+  if (relaunch) relaunch.style.display = 'flex';
+}
+
+function nextTourStep() {
+  tourIndex++;
+  if (tourIndex >= tourSteps.length) { endTour(); return; }
+  showTourStep();
+}
+
+function showTourStep() {
+  const step = tourSteps[tourIndex];
+  const target = document.querySelector(step.selector);
+  if (!target) { nextTourStep(); return; }
+
+  target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  // esperar al scroll antes de posicionar
+  setTimeout(() => {
+    const rect = target.getBoundingClientRect();
+    const highlight = document.getElementById('tour-highlight');
+    const tooltip = document.getElementById('tour-tooltip');
+    const pad = 8;
+
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const hTop = Math.max(rect.top - pad, -pad);
+    const hLeft = Math.max(rect.left - pad, -pad);
+    const hBottom = Math.min(rect.bottom + pad, vh + pad);
+    const hRight = Math.min(rect.right + pad, vw + pad);
+
+    highlight.style.top = hTop + 'px';
+    highlight.style.left = hLeft + 'px';
+    highlight.style.width = (hRight - hLeft) + 'px';
+    highlight.style.height = (hBottom - hTop) + 'px';
+
+    const isMobile = window.innerWidth <= 960;
+    let top, arrow;
+    if (rect.bottom + 220 < window.innerHeight) {
+      top = rect.bottom + pad + 14;
+      arrow = 'top';
+    } else {
+      top = Math.max(rect.top - 14, 20) - 200;
+      arrow = 'bottom';
+    }
+    top = Math.max(20, Math.min(top, window.innerHeight - 220));
+
+    let left = isMobile ? null : Math.min(Math.max(rect.left, 20), window.innerWidth - 340);
+
+    tooltip.style.top = top + 'px';
+    if (!isMobile) tooltip.style.left = left + 'px';
+    tooltip.setAttribute('data-arrow', arrow);
+
+    document.getElementById('tour-step-label').textContent = `Paso ${tourIndex + 1} de ${tourSteps.length}`;
+    document.getElementById('tour-title-text').textContent = step.title;
+    document.getElementById('tour-desc-text').textContent = step.desc;
+    document.getElementById('tour-progress-text').textContent = `${tourIndex + 1} / ${tourSteps.length}`;
+    document.getElementById('tour-next-btn').textContent = tourIndex === tourSteps.length - 1 ? 'Finalizar ✓' : 'Siguiente →';
+  }, 350);
+}
+
+window.addEventListener('resize', () => {
+  if (document.getElementById('tour-overlay').classList.contains('active')) showTourStep();
+});
+</script>
+</body>
+</html>
